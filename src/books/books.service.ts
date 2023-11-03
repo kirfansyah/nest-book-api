@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateBookDto } from './dto/create-book.dto';
+import { UpdateBookDto } from './dto/update-book.dto';
 
 @Injectable()
 export class BooksService {
@@ -27,17 +29,20 @@ export class BooksService {
     return this.books[bookIdx];
   }
 
-  createBook(title: string, author: string, category: string) {
-    const book = { id: uuidv4(), title, author, category };
+  createBook(CreateBookDto: CreateBookDto) {
+    const { title, author, category, year } = CreateBookDto;
+    const book = { id: uuidv4(), title, author, category, year };
     this.books.push(book);
     return book;
   }
 
-  updateBook(id: string, title: string, author: string, category: string) {
+  updateBook(id: string, UpdateBookDto: UpdateBookDto) {
+    const { title, author, category, year } = UpdateBookDto;
     const bookIdx = this.findBookById(id);
     this.books[bookIdx].title = title;
     this.books[bookIdx].author = author;
     this.books[bookIdx].category = category;
+    this.books[bookIdx].year = year;
   }
 
   findBookById(id: string) {
