@@ -11,18 +11,17 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { UsePipes, ValidationPipe } from '@nestjs/common';
+import { filter } from 'rxjs';
+import { FilterBookDto } from './dto/filter-book.dto';
 
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
   @Get()
-  getBooks(
-    @Query('title') title: string,
-    @Query('author') author: string,
-    @Query('category') category: string,
-  ) {
-    return this.booksService.getBooks(title, author, category);
+  getBooks(@Query() filter: FilterBookDto) {
+    return this.booksService.getBooks(filter);
   }
 
   @Get('/:id')
@@ -31,6 +30,7 @@ export class BooksController {
   }
 
   @Post()
+  @UsePipes(ValidationPipe)
   createBook(@Body() payload: CreateBookDto) {
     return this.booksService.createBook(payload);
   }
